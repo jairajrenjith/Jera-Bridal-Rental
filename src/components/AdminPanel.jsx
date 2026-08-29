@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from 'react'
 import { useInventory } from '../context/InventoryContext.jsx'
-import { fetchBookings, updateBookingStatus, updateItem, addItem, deleteItem } from '../utils/api.js'
+import { fetchBookings, updateBookingStatus, updateItem, addItem, deleteItem, deleteBooking } from '../utils/api.js'
 import { generateInvoice } from '../utils/generateInvoice.js'
 import { waLink, mailLink, buildDecisionMessage, buildFollowUpMessage } from '../utils/contact.js'
 
@@ -31,6 +31,7 @@ export default function AdminPanel() {
   const [addForm, setAddForm] = useState(emptyAddForm)
   const [addingItem, setAddingItem] = useState(false)
   const [deletingId, setDeletingId] = useState(null)
+  const [deletingBookingId, setDeletingBookingId] = useState(null)
 
   const tryLogin = async (key) => {
     setChecking(true)
@@ -126,6 +127,18 @@ export default function AdminPanel() {
       await refreshItems()
     } else {
       alert(res.error || 'Could not add the item.')
+    }
+  }
+
+  const removeBooking = async (booking) => {
+    if (!window.confirm(`Delete this booking (${booking.itemName}, Ref: ${booking.bookingId})? This can't be undone.`)) return
+    setDeletingBookingId(booking.bookingId)
+    const res = await deleteBooking(adminKey, booking.bookingId)
+    setDeletingBookingId(null)
+    if (res.success) {
+      await loadBookings()
+    } else {
+      alert(res.error || 'Could not delete that booking.')
     }
   }
 
@@ -255,6 +268,13 @@ export default function AdminPanel() {
                         {b.status === 'Approved' && (
                           <button className="btn btn--ghost" onClick={() => generateInvoice(b)}>Invoice</button>
                         )}
+                        <button
+                          className="btn btn--outline"
+                          disabled={deletingBookingId === b.bookingId}
+                          onClick={() => removeBooking(b)}
+                        >
+                          {deletingBookingId === b.bookingId ? 'Deleting…' : 'Delete'}
+                        </button>
                       </div>
                     </td>
                   </tr>

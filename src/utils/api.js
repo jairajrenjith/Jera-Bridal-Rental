@@ -119,6 +119,18 @@ export async function addItem(adminKey, fields) {
   }
 }
 
+export async function deleteBooking(adminKey, bookingId) {
+  try {
+    const ref = doc(bookingsRef, bookingId)
+    const snap = await getDoc(ref)
+    if (!snap.exists()) return { success: false, error: 'Booking not found: ' + bookingId }
+    await deleteDoc(ref)
+    return { success: true, bookingId }
+  } catch (err) {
+    return { success: false, error: friendlyError(err) }
+  }
+}
+
 export async function deleteItem(adminKey, id) {
   try {
     const ref = doc(collectionsRef, id)
