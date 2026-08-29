@@ -1,4 +1,70 @@
+import { useEffect, useRef, useState } from 'react'
+
+const STATS = [
+  { value: 120, suffix: '+', label: 'Bridal outfits & sets' },
+  { value: 60, suffix: '+', label: 'Jewellery sets in stock' },
+  { value: 24, suffix: ' hrs', label: 'To lock & confirm a booking' },
+]
+
+// Counts up from 0 to `target` once `active` becomes true, instead of
+// showing the number plainly on load.
+function useCountUp(target, active, duration = 1400) {
+  const [value, setValue] = useState(0)
+
+  useEffect(() => {
+    if (!active) return
+    let frame
+    let start = null
+
+    const tick = (timestamp) => {
+      if (start === null) start = timestamp
+      const progress = Math.min((timestamp - start) / duration, 1)
+      const eased = 1 - Math.pow(1 - progress, 3) // ease-out
+      setValue(Math.round(eased * target))
+      if (progress < 1) frame = requestAnimationFrame(tick)
+    }
+
+    frame = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(frame)
+  }, [active, target, duration])
+
+  return value
+}
+
+function StatBox({ stat, active }) {
+  const value = useCountUp(stat.value, active)
+  return (
+    <div className="hero__stat">
+      <dt>
+        {value}
+        {stat.suffix}
+      </dt>
+      <dd>{stat.label}</dd>
+    </div>
+  )
+}
+
 export default function Hero() {
+  const statsRef = useRef(null)
+  const [active, setActive] = useState(false)
+
+  // Trigger the count-up only once the stats actually scroll into view.
+  useEffect(() => {
+    const el = statsRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setActive(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.4 }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <section id="top" className="hero">
       <div className="hero__glow" aria-hidden="true" />
@@ -24,19 +90,10 @@ export default function Hero() {
           </a>
         </div>
 
-        <dl className="hero__stats">
-          <div>
-            <dt>120+</dt>
-            <dd>Bridal outfits &amp; sets</dd>
-          </div>
-          <div>
-            <dt>60+</dt>
-            <dd>Jewellery sets in stock</dd>
-          </div>
-          <div>
-            <dt>24 hrs</dt>
-            <dd>To lock &amp; confirm a booking</dd>
-          </div>
+        <dl className="hero__stats" ref={statsRef}>
+          {STATS.map((s) => (
+            <StatBox key={s.label} stat={s} active={active} />
+          ))}
         </dl>
       </div>
     </section>
