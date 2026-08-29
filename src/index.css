@@ -1,3 +1,88 @@
+:root {
+  --void: #000000;
+  --panel: #070604;
+  --panel-2: #100d08;
+  --line: #2b2418;
+
+  --gold: #d4af37;
+  --gold-bright: #f3d375;
+  --gold-deep: #8a6a1f;
+
+  --cream: #ecd9a0;
+  --muted: #b9a875;
+  --muted-2: #7a6c48;
+
+  --wine: #8a3242;
+  --wine-bright: #c85a6d;
+  --green: #6f8f5a;
+
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Jost', 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+  --container: 1180px;
+  --radius: 2px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 18px 36px -18px rgba(0, 0, 0, 0.7);
+  --shadow-gold: 0 10px 24px -8px rgba(212, 175, 55, 0.22);
+}
+
+/* update the navbar background rgba values to pure black: */
+.navbar { background: rgba(0, 0, 0, 0.7); }
+.navbar--scrolled { background: rgba(0, 0, 0, 0.95); }
+
+/* update this existing selector to also cover pending items: */
+.item-card--locked .item-card__photo img,
+.item-card--booked .item-card__photo img,
+.item-card--pending .item-card__photo img { filter: grayscale(0.5) brightness(0.55); }
+
+.status-pill--pending { background: rgba(212, 175, 55, 0.9); color: #221c0f; }
+
+.confirm__badge--error { color: var(--wine-bright); border-color: var(--wine); }
+
+.footer__admin { margin-top: 8px; }
+.footer__admin a { color: var(--muted-2); font-size: 11px; }
+.footer__admin a:hover { color: var(--gold); }
+
+/* ---------------------------------------------------------------- admin */
+.admin { min-height: 100vh; padding: 48px 24px 80px; max-width: 980px; margin: 0 auto; }
+.admin--login { display: grid; place-items: center; padding: 24px; }
+.admin-login { width: 100%; max-width: 380px; background: var(--panel); border: 1px solid var(--gold-deep); padding: 36px; }
+.admin__header { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; margin-bottom: 32px; flex-wrap: wrap; }
+.admin__tabs { display: flex; gap: 8px; border-bottom: 1px solid var(--line); margin-bottom: 32px; flex-wrap: wrap; }
+.tab { background: none; border: none; color: var(--muted); font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; padding: 12px 4px; margin-right: 20px; cursor: pointer; border-bottom: 2px solid transparent; display: flex; align-items: center; gap: 8px; }
+.tab:hover { color: var(--gold-bright); }
+.tab--active { color: var(--gold-bright); border-color: var(--gold); }
+.tab__badge { background: var(--wine); color: #fff; font-size: 10px; padding: 2px 7px; border-radius: 999px; }
+.admin__section-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+.admin__section-head h2 { font-family: var(--font-display); font-size: 22px; color: var(--cream); margin: 0; }
+
+.admin__cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; }
+.admin-card { background: var(--panel); border: 1px solid var(--line); padding: 20px; display: flex; flex-direction: column; gap: 4px; }
+.admin-card__row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.admin-card__meta { font-size: 13px; color: var(--muted); margin: 0; }
+.admin-card__meta--dim { color: var(--muted-2); font-family: var(--font-mono); font-size: 11px; }
+.admin-card__actions { display: flex; gap: 10px; margin-top: 14px; }
+.admin-card__actions .btn { flex: 1; }
+
+.badge { display: inline-block; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; }
+.badge--pending { background: rgba(212, 175, 55, 0.18); color: var(--gold-bright); border: 1px solid var(--gold-deep); }
+.badge--approved, .badge--booked, .badge--available { background: rgba(111, 143, 90, 0.18); color: #a8caa0; border: 1px solid var(--green); }
+.badge--rejected, .badge--locked { background: rgba(138, 50, 66, 0.18); color: var(--wine-bright); border: 1px solid var(--wine); }
+
+.admin-table__wrap { overflow-x: auto; border: 1px solid var(--line); }
+.admin-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.admin-table th, .admin-table td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+.admin-table th { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted-2); }
+.admin-table__dim { color: var(--muted-2); font-family: var(--font-mono); font-size: 11px; }
+.admin-table__actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.admin-table__actions .btn { padding: 8px 12px; font-size: 11px; }
+
+.edit-form { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; padding: 16px 4px 20px; }
+.edit-form__wide { grid-column: 1 / -1; }
+.edit-form select { background: var(--void); border: 1px solid var(--line); color: var(--cream); font-family: var(--font-body); font-size: 14px; padding: 11px 12px; border-radius: var(--radius); }
+
 /* ==========================================================================
    Jera Bridal Rental — design tokens
    Palette takes its cue from a Kerala kasavu (gold-brocade) wedding border:
