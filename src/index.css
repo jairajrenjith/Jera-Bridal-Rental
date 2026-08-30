@@ -647,3 +647,14 @@ em { font-style: italic; color: var(--gold-bright); }
   html { scroll-behavior: auto; }
   * { transition: none !important; }
 }
+
+.photo-field__row { display: flex; gap: 14px; align-items: flex-start; }
+.photo-field__preview {
+  width: 84px; height: 84px; flex-shrink: 0;
+  border: 1px solid var(--line); border-radius: var(--radius);
+  overflow: hidden; background: var(--panel-2);
+}
+.photo-field__preview img { width: 100%; height: 100%; object-fit: cover; }
+.photo-field__controls { flex: 1; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.photo-field__actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.photo-field__upload { cursor: pointer; text-align: center; }

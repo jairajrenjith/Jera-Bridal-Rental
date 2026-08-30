@@ -15,6 +15,45 @@ function friendlyError(err) {
   return err.message || 'Something went wrong.'
 }
 
+// Uploads an item photo to ImgBB (free image host, no billing plan
+// required) and returns its public URL plus a delete URL. The delete
+// URL is kept on the item so we can attempt cleanup if the photo is
+// replaced or removed later.
+export async function uploadItemPhoto(itemId, file) {
+  try {
+    const key = import.meta.env.VITE_IMGBB_API_KEY
+    if (!key) return { success: false, error: 'Image hosting is not configured (missing VITE_IMGBB_API_KEY).' }
+
+    const formData = new FormData()
+    formData.append('image', file)
+
+    const res = await fetch(`https://api.imgbb.com/1/upload?key=${key}`, {
+      method: 'POST',
+      body: formData,
+    })
+    const data = await res.json()
+    if (!data.success) return { success: false, error: data.error?.message || 'Upload failed.' }
+
+    return { success: true, url: data.data.url, deleteUrl: data.data.delete_url || '' }
+  } catch (err) {
+    return { success: false, error: err.message || 'Could not upload the photo.' }
+  }
+}
+
+// Best-effort removal of a previously uploaded photo from ImgBB. ImgBB's
+// delete link is built for a browser click-to-confirm page, so a
+// background request can't fully guarantee the file itself is erased on
+// their end — but this always clears it out of your app either way.
+export async function deleteItemPhoto(deleteUrl) {
+  if (!deleteUrl) return { success: true }
+  try {
+    await fetch(deleteUrl, { mode: 'no-cors' })
+  } catch {
+    // Ignore — this is best-effort only.
+  }
+  return { success: true }
+}
+
 export async function fetchCollections() {
   try {
     const snap = await getDocs(collectionsRef)
@@ -111,6 +150,7 @@ export async function addItem(adminKey, fields) {
       color: fields.color || '',
       status: fields.status || 'available',
       photo: fields.photo || '',
+      photoDeleteUrl: fields.photoDeleteUrl || '',
     }
     await setDoc(ref, item)
     return { success: true, item: { id, ...item } }

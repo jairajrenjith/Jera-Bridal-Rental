@@ -1,13 +1,16 @@
 import { Fragment, useEffect, useState } from 'react'
 import { useInventory } from '../context/InventoryContext.jsx'
-import { fetchBookings, updateBookingStatus, updateItem, addItem, deleteItem, deleteBooking } from '../utils/api.js'
+import {
+  fetchBookings, updateBookingStatus, updateItem, addItem, deleteItem, deleteBooking,
+  uploadItemPhoto, deleteItemPhoto,
+} from '../utils/api.js'
 import { generateInvoice } from '../utils/generateInvoice.js'
 import { waLink, mailLink, buildDecisionMessage, buildFollowUpMessage } from '../utils/contact.js'
 
 const SESSION_KEY = 'jbr_admin_key'
 
 const emptyAddForm = {
-  id: '', name: '', category: '', price: '', deposit: '', size: '', color: '', photo: '', status: 'available',
+  id: '', name: '', category: '', price: '', deposit: '', size: '', color: '', photo: '', photoDeleteUrl: '', status: 'available',
 }
 
 export default function AdminPanel() {
@@ -32,6 +35,8 @@ export default function AdminPanel() {
   const [addingItem, setAddingItem] = useState(false)
   const [deletingId, setDeletingId] = useState(null)
   const [deletingBookingId, setDeletingBookingId] = useState(null)
+  const [uploadingAddPhoto, setUploadingAddPhoto] = useState(false)
+  const [uploadingEditPhoto, setUploadingEditPhoto] = useState(false)
 
   const tryLogin = async (key) => {
     setChecking(true)
@@ -90,8 +95,48 @@ export default function AdminPanel() {
     setEditingId(item.id)
     setEditForm({
       name: item.name, category: item.category, price: item.price, deposit: item.deposit,
-      size: item.size, color: item.color, photo: item.photo, status: item.status,
+      size: item.size, color: item.color, photo: item.photo, photoDeleteUrl: item.photoDeleteUrl || '', status: item.status,
     })
+  }
+
+  const handleAddPhotoSelect = async (e) => {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file) return
+    setUploadingAddPhoto(true)
+    const res = await uploadItemPhoto(addForm.id, file)
+    setUploadingAddPhoto(false)
+    if (res.success) {
+      if (addForm.photoDeleteUrl) await deleteItemPhoto(addForm.photoDeleteUrl)
+      setAddForm((f) => ({ ...f, photo: res.url, photoDeleteUrl: res.deleteUrl }))
+    } else {
+      alert(res.error || 'Could not upload the photo.')
+    }
+  }
+
+  const removeAddPhoto = async () => {
+    if (addForm.photoDeleteUrl) await deleteItemPhoto(addForm.photoDeleteUrl)
+    setAddForm((f) => ({ ...f, photo: '', photoDeleteUrl: '' }))
+  }
+
+  const handleEditPhotoSelect = async (e) => {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file) return
+    setUploadingEditPhoto(true)
+    const res = await uploadItemPhoto(editingId, file)
+    setUploadingEditPhoto(false)
+    if (res.success) {
+      if (editForm.photoDeleteUrl) await deleteItemPhoto(editForm.photoDeleteUrl)
+      setEditForm((f) => ({ ...f, photo: res.url, photoDeleteUrl: res.deleteUrl }))
+    } else {
+      alert(res.error || 'Could not upload the photo.')
+    }
+  }
+
+  const removeEditPhoto = async () => {
+    if (editForm.photoDeleteUrl) await deleteItemPhoto(editForm.photoDeleteUrl)
+    setEditForm((f) => ({ ...f, photo: '', photoDeleteUrl: '' }))
   }
 
   const saveEdit = async (id) => {
@@ -327,9 +372,32 @@ export default function AdminPanel() {
               <label className="field"><span>Color</span>
                 <input value={addForm.color} onChange={(e) => setAddForm((f) => ({ ...f, color: e.target.value }))} />
               </label>
-              <label className="field edit-form__wide"><span>Photo URL</span>
-                <input value={addForm.photo} onChange={(e) => setAddForm((f) => ({ ...f, photo: e.target.value }))} placeholder="https://..." />
-              </label>
+              <div className="field edit-form__wide photo-field">
+                <span>Photo</span>
+                <div className="photo-field__row">
+                  {addForm.photo && (
+                    <div className="photo-field__preview">
+                      <img src={addForm.photo} alt="Preview" />
+                    </div>
+                  )}
+                  <div className="photo-field__controls">
+                    <input
+                      value={addForm.photo}
+                      onChange={(e) => setAddForm((f) => ({ ...f, photo: e.target.value, photoDeleteUrl: '' }))}
+                      placeholder="https://... (or upload a photo)"
+                    />
+                    <div className="photo-field__actions">
+                      <label className="btn btn--ghost photo-field__upload">
+                        {uploadingAddPhoto ? 'Uploading…' : 'Upload Photo'}
+                        <input type="file" accept="image/*" hidden disabled={uploadingAddPhoto} onChange={handleAddPhotoSelect} />
+                      </label>
+                      {addForm.photo && (
+                        <button type="button" className="btn btn--outline" onClick={removeAddPhoto}>Remove Image</button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
               <label className="field"><span>Status</span>
                 <select value={addForm.status} onChange={(e) => setAddForm((f) => ({ ...f, status: e.target.value }))}>
                   <option value="available">available</option>
@@ -395,9 +463,32 @@ export default function AdminPanel() {
                             <label className="field"><span>Color</span>
                               <input value={editForm.color} onChange={(e) => setEditForm((f) => ({ ...f, color: e.target.value }))} />
                             </label>
-                            <label className="field edit-form__wide"><span>Photo URL</span>
-                              <input value={editForm.photo} onChange={(e) => setEditForm((f) => ({ ...f, photo: e.target.value }))} />
-                            </label>
+                            <div className="field edit-form__wide photo-field">
+                              <span>Photo</span>
+                              <div className="photo-field__row">
+                                {editForm.photo && (
+                                  <div className="photo-field__preview">
+                                    <img src={editForm.photo} alt="Preview" />
+                                  </div>
+                                )}
+                                <div className="photo-field__controls">
+                                  <input
+                                    value={editForm.photo}
+                                    onChange={(e) => setEditForm((f) => ({ ...f, photo: e.target.value, photoDeleteUrl: '' }))}
+                                    placeholder="https://... (or upload a photo)"
+                                  />
+                                  <div className="photo-field__actions">
+                                    <label className="btn btn--ghost photo-field__upload">
+                                      {uploadingEditPhoto ? 'Uploading…' : 'Upload Photo'}
+                                      <input type="file" accept="image/*" hidden disabled={uploadingEditPhoto} onChange={handleEditPhotoSelect} />
+                                    </label>
+                                    {editForm.photo && (
+                                      <button type="button" className="btn btn--outline" onClick={removeEditPhoto}>Remove Image</button>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
                             <label className="field"><span>Status</span>
                               <select value={editForm.status} onChange={(e) => setEditForm((f) => ({ ...f, status: e.target.value }))}>
                                 <option value="available">available</option>
