@@ -82,10 +82,10 @@ export default function Hero() {
           you.
         </p>
         <div className="hero__actions">
-          <a href="#collection" className="btn btn--primary">
+          <a href="#/collections" className="btn btn--primary">
             Browse the Collection
           </a>
-          <a href="#availability" className="btn btn--outline">
+          <a href="#/collections" className="btn btn--outline">
             Check Availability
           </a>
         </div>

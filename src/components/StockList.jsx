@@ -13,17 +13,24 @@ export default function StockList({ onBook }) {
   const { items } = useInventory()
   const [category, setCategory] = useState('All')
   const [statusFilter, setStatusFilter] = useState('all')
+  const [search, setSearch] = useState('')
 
   const filtered = useMemo(() => {
+    const query = search.trim().toLowerCase()
     return items.filter((it) => {
       const categoryOk = category === 'All' || it.category === category
       const statusOk =
         statusFilter === 'all' ||
         (statusFilter === 'available' && it.status === 'available') ||
         (statusFilter === 'locked' && it.status !== 'available')
-      return categoryOk && statusOk
+      const searchOk =
+        query === '' ||
+        it.name.toLowerCase().includes(query) ||
+        it.id.toLowerCase().includes(query) ||
+        (it.color || '').toLowerCase().includes(query)
+      return categoryOk && statusOk && searchOk
     })
-  }, [items, category, statusFilter])
+  }, [items, category, statusFilter, search])
 
   const availableCount = items.filter((i) => i.status === 'available').length
 
@@ -41,6 +48,20 @@ export default function StockList({ onBook }) {
             Booked or locked items are hidden from other customers
             automatically.
           </p>
+        </div>
+
+        <div className="search-field">
+          <svg className="search-field__icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" strokeWidth="2" />
+            <line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+          <input
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search the collection by name, code or colour…"
+            aria-label="Search the collection"
+          />
         </div>
 
         <div className="filters">
@@ -76,7 +97,9 @@ export default function StockList({ onBook }) {
           ))}
           {filtered.length === 0 && (
             <p className="empty-state">
-              Nothing matches that filter yet — try another category.
+              {search
+                ? `Nothing matches "${search}" — try a different search term or filter.`
+                : 'Nothing matches that filter yet — try another category.'}
             </p>
           )}
         </div>

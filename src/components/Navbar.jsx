@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 
 const LINKS = [
-  { href: '#collection', label: 'Collection' },
-  { href: '#availability', label: 'Availability' },
+  { href: '#/collections', label: 'Collections' },
+  { href: '#about', label: 'About Us' },
   { href: '#how-it-works', label: 'How Booking Works' },
   { href: '#contact', label: 'Contact' },
 ]
@@ -35,7 +35,7 @@ export default function Navbar() {
           ))}
         </nav>
 
-        <a href="#collection" className="btn btn--ghost navbar__cta">
+        <a href="#/collections" className="btn btn--ghost navbar__cta">
           Check Stock
         </a>
 
