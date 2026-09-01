@@ -690,15 +690,11 @@ em { font-style: italic; color: var(--gold-bright); }
 /* -------------------------------------------------------------- mobile */
 @media (max-width: 860px) {
   .rent-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
   }
 
   .rent-grid--center-last .rent-card {
-    grid-column: span 1;
-  }
-
-  .rent-grid--center-last .rent-card:nth-child(5) {
-    grid-column: 1 / span 2;
+    grid-column: 1;
   }
 
   .wardrobe-grid {
