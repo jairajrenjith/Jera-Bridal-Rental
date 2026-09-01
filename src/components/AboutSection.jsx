@@ -69,11 +69,6 @@ export default function AboutSection() {
             ))}
           </div>
 
-          <div className="about-collections__cta">
-            <a href="#/collections" className="btn btn--primary">
-              View the Collection
-            </a>
-          </div>
         </div>
       </section>
 

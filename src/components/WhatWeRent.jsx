@@ -9,7 +9,7 @@ export default function WhatWeRent() {
           Everything for the big day, in one wardrobe
         </h2>
 
-        <div className="rent-grid">
+        <div className="rent-grid wardrobe-grid">
           {WHAT_WE_RENT.map((r) => (
             <div className="rent-card" key={r.title}>
               <span className="rent-card__mark" aria-hidden="true">

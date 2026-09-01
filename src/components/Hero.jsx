@@ -68,6 +68,12 @@ export default function Hero() {
   return (
     <section id="top" className="hero">
       <div className="hero__glow" aria-hidden="true" />
+      <img
+        className="hero__portrait"
+        src="/hero-bride.jpg"
+        alt=""
+        aria-hidden="true"
+      />
       <div className="container hero__inner">
         <p className="eyebrow">Bridal Wear &amp; Jewellery, on Rent</p>
         <h1 className="hero__title">
