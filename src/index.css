@@ -735,6 +735,27 @@ em { font-style: italic; color: var(--gold-bright); }
   .search-field { max-width: 100%; }
 }
 
+/*image for mobile view*/
+@media (max-width: 1179px) {
+  .hero__portrait {
+    display: block;
+    width: 100%;
+    opacity: 0.35;
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(0, 0, 0, 0.5) 18%,
+      #000 55%
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(0, 0, 0, 0.5) 18%,
+      #000 55%
+    );
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   * { transition: none !important; }
