@@ -727,14 +727,19 @@ em { font-style: italic; color: var(--gold-bright); }
   }
   .hero { padding: 90px 0 60px; }
   .hero__stats { grid-template-columns: 1fr; max-width: 100%; }
-  .rent-grid { grid-template-columns: 1fr; }
+  .rent-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .rent-grid--center-last .rent-card {
+    grid-column: 1;
+  }
   .section__head { flex-direction: column; align-items: flex-start; }
   .footer__inner { grid-template-columns: 1fr; }
   .page-header { padding: 56px 0 0; }
   .page-header .kasavu-rule { margin-top: 32px; }
   .search-field { max-width: 100%; }
 }
-
 /*image for mobile view*/
 @media (max-width: 1179px) {
   .hero__portrait {
