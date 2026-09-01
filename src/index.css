@@ -698,7 +698,7 @@ em { font-style: italic; color: var(--gold-bright); }
   }
 
   .wardrobe-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
   }
 
   .steps { grid-template-columns: 1fr; }
