@@ -886,3 +886,77 @@ em { font-style: italic; color: var(--gold-bright); }
   font-size: 18px;
   margin: 28px 0 0;
 }
+/* ------------------------------------------------- curated collections */
+/* Expandable slide strip used in the "Our Collections" section
+   (see CuratedCollections.jsx). Purely additive — does not touch any
+   existing selectors above. */
+.curated {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+.curated__caption {
+  background: var(--void);
+  padding: 30px 28px;
+}
+.curated__caption .eyebrow { margin-bottom: 12px; }
+.curated__caption h3 { font-size: 24px; margin-bottom: 12px; }
+.curated__caption p:not(.eyebrow) { color: var(--muted); font-size: 14px; line-height: 1.65; margin: 0; }
+
+.curated__track {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--line);
+}
+
+.curated__slide {
+  display: block;
+  width: 100%;
+  height: 90px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: var(--void);
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  transition: height 0.45s ease;
+}
+.curated__slide--active { height: 420px; }
+.curated__slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: brightness(0.6);
+  transition: filter 0.3s ease;
+}
+.curated__slide--active img { filter: brightness(1); }
+.curated__slide:hover img,
+.curated__slide:focus-visible img { filter: brightness(0.85); }
+.curated__slide--active:hover img,
+.curated__slide--active:focus-visible img { filter: brightness(1); }
+.curated__slide:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+
+@media (min-width: 861px) {
+  .curated { flex-direction: row; height: 480px; }
+  .curated__caption {
+    flex: 0 0 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .curated__track { flex: 1; flex-direction: row; gap: 1px; }
+  .curated__slide {
+    width: auto;
+    height: auto;
+    flex: 0 0 90px;
+    transition: flex-grow 0.45s ease, flex-basis 0.45s ease;
+  }
+  .curated__slide--active { flex: 5 1 380px; height: auto; }
+}

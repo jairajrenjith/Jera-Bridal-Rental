@@ -70,7 +70,7 @@ export default function Hero() {
       <div className="hero__glow" aria-hidden="true" />
       <img
         className="hero__portrait"
-        src="/hero-bride.jpg"
+        src="/hero-bride.png"
         alt=""
         aria-hidden="true"
       />
