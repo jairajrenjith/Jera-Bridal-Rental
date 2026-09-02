@@ -35,9 +35,6 @@ export default function Navbar() {
           ))}
         </nav>
 
-        <a href="#/collections" className="btn btn--ghost navbar__cta">
-          Check Stock
-        </a>
 
         <button
           className="navbar__toggle"
