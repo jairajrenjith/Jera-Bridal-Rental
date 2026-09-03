@@ -2,7 +2,7 @@
 // google-apps-script/Code.gs. This file only keeps the static filter
 // categories and the "what we rent" grid content.
 
-export const CATEGORIES = ['All', 'Bridal Dress', 'Jewellery']
+export const CATEGORIES = ['All', 'Bridal Dress', 'Jewellery', 'Mehendi']
 
 export const WHAT_WE_RENT = [
   { title: 'Bridal Lehengas', desc: 'Kanjeevaram, Banarasi and designer lehengas in a full range of colours and sizes.' },

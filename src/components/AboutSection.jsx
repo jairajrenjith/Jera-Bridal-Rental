@@ -1,12 +1,6 @@
+import ExploreCollections from './ExploreCollections.jsx'
 import { SHOP } from '../config.js'
-
-const COLLECTIONS = [
-  { title: 'Bridal Dresses', desc: 'Lehengas, gowns and sarees for the bride, chosen for elegance and comfort.' },
-  { title: 'Bridal Ornaments & Jewellery', desc: 'Temple sets, kemp stone sets and other pieces to complete the bridal look.' },
-  { title: 'Bridesmaid Dresses', desc: 'Coordinated, stylish outfits for the bride’s closest companions.' },
-  { title: 'Party Wear', desc: 'Designer wear for receptions, sangeet and other celebration events.' },
-  { title: 'Special Occasion Collections', desc: 'Curated pieces for engagements, pre-wedding shoots and festive occasions.' },
-]
+import WhatWeRent from './WhatWeRent.jsx'
 
 const WHY_CHOOSE_US = [
   'Elegant & Trendy Collections',
@@ -45,32 +39,8 @@ export default function AboutSection() {
         </div>
       </section>
 
-      <section className="section section--panel" id="about-collections">
-        <div className="container">
-          <p className="eyebrow eyebrow--center">Our Collections</p>
-          <h2 className="section__title section__title--center">
-            Everything to complete your celebration look
-          </h2>
-          <p className="section__title--center about-lead__sub">
-            From the perfect bridal outfit to elegant ornaments and stylish
-            bridesmaid dresses, we bring everything you need to complete your
-            celebration look under one roof.
-          </p>
-
-          <div className="rent-grid rent-grid--center-last">
-            {COLLECTIONS.map((c) => (
-              <div className="rent-card" key={c.title}>
-                <span className="rent-card__mark" aria-hidden="true">
-                  {c.title.charAt(0)}
-                </span>
-                <h3>{c.title}</h3>
-                <p>{c.desc}</p>
-              </div>
-            ))}
-          </div>
-
-        </div>
-      </section>
+      <WhatWeRent />
+      <ExploreCollections />
 
       <section className="section">
         <div className="container split-grid">
